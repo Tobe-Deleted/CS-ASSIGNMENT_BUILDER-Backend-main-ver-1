@@ -179,6 +179,37 @@ public class TestMethods : AssignmentBase
         return path;
         // throw new NotImplementedException();
     }
+
+    public string TernaryTranslator(string str)
+    {
+        string result = "";
+        string[] strArr = str.Split(' ');
+        foreach (string s in strArr)
+        {
+            string st = s;
+            int value = 0;
+            int positionalValue = 1;
+            if(s.Length < 5)
+            {
+                for(int i = 0; i < 6 - s.Length; i++)
+                {
+                    st = st.Insert(0, "0");
+                }
+            }
+
+            for (int i = 5; i >= 0; i--)
+            {
+                value += (st[i] -48) * positionalValue;
+                positionalValue *= 3;
+            }
+            if (value > 248 || value < 0)
+                throw new ArgumentException($"{s} is outside the ASCII table (0 to 100012)");
+            result = result + Convert.ToChar(value);
+        }
+        return result;
+    }
+
+    
     /*
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     *****************     TESTS ********************************
@@ -311,5 +342,13 @@ public class TestMethods : AssignmentBase
         string filePath = "file.txt";
         string textContent = "Hello, World!";
         Assert.Equal(textContent, File.ReadAllText(AppendTextContent(filePath, textContent)));
+    }
+
+    [Assignment(15)]
+    public void TestTernaryTranslator()
+    {
+        Assert.Equal("Hello, World!", TernaryTranslator("002200 010202 011000 011000 011010 001122 001012 010020 011010 011020 011000 010201 001020"));
+        Assert.Equal("It all began with the forging of the Great Rings", TernaryTranslator("002201 011022 001012 010121 011000 011000 001012 010122 010202 010211 010121 011002 001012 011102 010220 011022 010212 001012 011022 010212 010202 001012 010210 011010 011020 010211 010220 011002 010211 001012 011010 010210 001012 011022 010212 010202 001012 002122 011020 010202 010121 011022 001012 010001 010220 011002 010211 011021"));
+        Assert.Equal("Random bullshit go!", TernaryTranslator("010001 010121 011002 010201 011010 011001 001012 010122 011100 011000 011000 011021 010212 010220 011022 001012 010211 011010 001020"));
     }
 }
